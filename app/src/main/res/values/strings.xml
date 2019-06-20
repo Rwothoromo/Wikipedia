@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">Wikipedia</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_main">Wikipedia</string>
+    <string name="title_explore">Explore</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_history">History</string>
     <string name="search">Search</string>
+    <string name="search_wikipedia">Search Wikipedia</string>
+    <string name="result_icon">Result Icon</string>
+    <string name="article_image">Article Image</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="hello_wikipedian">Hello Wikipedian!</string>
 </resources>
