@@ -4,13 +4,21 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.SearchView
 import com.example.wikipedia.R
+import com.example.wikipedia.adapters.ArticleListItemRecyclerAdapter
+import com.example.wikipedia.providers.ArticleDataProvider
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
+
+    // get articles from the article provider
+    private val articleProvider: ArticleDataProvider = ArticleDataProvider()
+
+    private var adapter: ArticleListItemRecyclerAdapter = ArticleListItemRecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +26,10 @@ class SearchActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        // wire up the adapter with the recycler
+        search_results_recycler.layoutManager = LinearLayoutManager(this)
+        search_results_recycler.adapter = adapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -38,12 +50,19 @@ class SearchActivity : AppCompatActivity() {
         val searchView = searchItem!!.actionView as SearchView
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+        // focus and expand immediately the activity starts
         searchView.setIconifiedByDefault(false)
         searchView.requestFocus()
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                println("updated search")
+                // perform a search and update the recycler with the result
+                articleProvider.search(term = query, skip = 0, take = 20, responseHandler = { wikiResult ->
+                    adapter.currentResults.clear()
+                    adapter.currentResults.addAll(wikiResult.query!!.pages)
+                    runOnUiThread { adapter.notifyDataSetChanged() }
+                })
                 return false
             }
 
