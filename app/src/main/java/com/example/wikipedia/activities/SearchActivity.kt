@@ -9,20 +9,24 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import com.example.wikipedia.R
+import com.example.wikipedia.WikiApplication
 import com.example.wikipedia.adapters.ArticleListItemRecyclerAdapter
-import com.example.wikipedia.providers.ArticleDataProvider
+import com.example.wikipedia.managers.WikiManager
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
 
-    // get articles from the article provider
-    private val articleProvider: ArticleDataProvider = ArticleDataProvider()
+    // get articles from the WikiManager
+    private var wikiManager: WikiManager? = null
 
     private var adapter: ArticleListItemRecyclerAdapter = ArticleListItemRecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        // instantiate wikiManager
+        wikiManager = (applicationContext as WikiApplication).wikiManager
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -58,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 // perform a search and update the recycler with the result
-                articleProvider.search(term = query, skip = 0, take = 20, responseHandler = { wikiResult ->
+                wikiManager?.search(term = query, skip = 0, take = 20, responseHandler = { wikiResult ->
                     adapter.currentResults.clear()
                     adapter.currentResults.addAll(wikiResult.query!!.pages)
                     runOnUiThread { adapter.notifyDataSetChanged() }

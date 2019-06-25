@@ -47,4 +47,8 @@ dependencies {
         exclude group: 'com.android.support'
         exclude module: ['exifinterface', 'support-annotations']
     }
+
+    // Anko
+    implementation 'org.jetbrains.anko:anko-sqlite:0.10.8'
+    implementation 'org.jetbrains.anko:anko-common:0.10.8'
 }
