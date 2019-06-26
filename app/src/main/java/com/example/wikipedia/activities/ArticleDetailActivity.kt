@@ -4,21 +4,21 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.widget.ImageView
 import com.example.wikipedia.R
 import com.example.wikipedia.WikiApplication
 import com.example.wikipedia.managers.WikiManager
 import com.example.wikipedia.models.WikiPage
+import com.example.wikipedia.shared.openUrlInBrowser
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_article_detail.*
 import org.jetbrains.anko.toast
 
 class ArticleDetailActivity : AppCompatActivity() {
 
     // get articles from the WikiManager
-    private var wikiManager: WikiManager? = null
+    var wikiManager: WikiManager? = null
 
     private var currentPage: WikiPage? = null
 
@@ -42,14 +42,17 @@ class ArticleDetailActivity : AppCompatActivity() {
         // the title of course
         supportActionBar?.title = currentPage?.title
 
-        // handler to ensure we properly load the url rather than calling over to the webview
-        article_detail_webview?.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?) = true
-        }
-        article_detail_webview.loadUrl(currentPage!!.fullurl)
+        // download image and update articleDetailImageView correctly
+        val articleDetailImageView = findViewById<ImageView>(R.id.article_detail_imageview)
+        if (currentPage?.thumbnail != null) Picasso.get().load(currentPage?.thumbnail!!.source).into(
+            articleDetailImageView
+        )
 
-        // Add the viewed page to the user's history
+        // add the viewed page to the user's history
         wikiManager?.addHistory(currentPage!!)
+
+        // open page in browser
+        openUrlInBrowser(currentPage!!.fullurl, this)
     }
 
     /**
