@@ -51,4 +51,8 @@ dependencies {
     // Anko
     implementation 'org.jetbrains.anko:anko-sqlite:0.10.8'
     implementation 'org.jetbrains.anko:anko-common:0.10.8'
+
+    // chrome tabs (replacement for webviews)
+    // webviews were originally used to display web content instead of launching them in a browser
+    implementation 'com.android.support:customtabs:28.0.0'
 }

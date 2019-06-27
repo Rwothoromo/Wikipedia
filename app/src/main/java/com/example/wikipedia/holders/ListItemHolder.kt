@@ -18,7 +18,7 @@ class ListItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var currentPage: WikiPage? = null
 
     init {
-        itemView.setOnClickListener { view: View? ->
+        itemView.setOnClickListener {
             val detailPageIntent = Intent(itemView.context, ArticleDetailActivity::class.java)
             val pageJson = Gson().toJson(currentPage)
 
