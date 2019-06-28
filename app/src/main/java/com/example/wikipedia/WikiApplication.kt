@@ -1,6 +1,7 @@
 package com.example.wikipedia
 
 import android.app.Application
+import android.content.Context
 import com.example.wikipedia.managers.WikiManager
 import com.example.wikipedia.providers.ArticleDataProvider
 import com.example.wikipedia.repositories.ArticleDatabaseOpenHelper
@@ -23,6 +24,18 @@ class WikiApplication : Application() {
         // ensure that no other classes are changing wikiManager
         private set
 
+    init {
+        instance = this
+    }
+
+    companion object {
+        private var instance: WikiApplication? = null
+
+        fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -33,4 +46,5 @@ class WikiApplication : Application() {
         wikiProvider = ArticleDataProvider()
         wikiManager = WikiManager(wikiProvider!!, favoritesRepository!!, historyRepository!!)
     }
+
 }

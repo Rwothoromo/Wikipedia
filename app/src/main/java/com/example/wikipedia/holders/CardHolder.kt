@@ -1,18 +1,24 @@
 package com.example.wikipedia.holders
 
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.wikipedia.R
-import com.example.wikipedia.activities.ArticleDetailActivity
+import com.example.wikipedia.WikiApplication
+import com.example.wikipedia.managers.WikiManager
 import com.example.wikipedia.models.WikiPage
-import com.google.gson.Gson
+import com.example.wikipedia.shared.openUrlInBrowser
 import com.squareup.picasso.Picasso
 
 
 class CardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    // get articles from the WikiManager
+    var wikiManager: WikiManager? = null
+
+    var context = WikiApplication.applicationContext()
+
     private val articleImageView = itemView.findViewById<ImageView>(R.id.article_image)
     private val titleTextView = itemView.findViewById<TextView>(R.id.article_text)
 
@@ -21,11 +27,17 @@ class CardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     init {
         itemView.setOnClickListener {
 
-            val detailPageIntent = Intent(itemView.context, ArticleDetailActivity::class.java)
-            val pageJson = Gson().toJson(currentPage)
+            // instantiate wikiManager
+            wikiManager = (context as WikiApplication).wikiManager
 
-            detailPageIntent.putExtra("page", pageJson)
-            itemView.context.startActivity((detailPageIntent))
+            // determine if the article is already in History before adding it
+            if (!wikiManager!!.getIsHistory(currentPage!!.pageid!!)) {
+                // add the viewed page to the user's history
+                wikiManager?.addHistory(currentPage!!)
+            }
+
+            // open page in browser
+            openUrlInBrowser(currentPage!!.fullurl, itemView.context, currentPage)
         }
     }
 
@@ -37,4 +49,5 @@ class CardHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // download image and update articleImageView correctly
         if (page.thumbnail != null) Picasso.get().load(page.thumbnail!!.source).into(articleImageView)
     }
+
 }

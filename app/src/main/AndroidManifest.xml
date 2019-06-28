@@ -21,8 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ArticleDetailActivity"/>
         <activity android:name=".activities.SearchActivity"/>
+        <receiver
+                android:name=".receviers.CopyLinkBroadcastReceiver"
+                android:enabled="true">
+        </receiver>
+        <receiver
+                android:name=".receviers.FavoriteBroadcastReceiver"
+                android:enabled="true">
+        </receiver>
     </application>
 
 </manifest>
