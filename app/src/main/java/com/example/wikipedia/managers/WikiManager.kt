@@ -57,4 +57,8 @@ class WikiManager(
         val history = historyRepository.getAllHistory()
         history.forEach { historyRepository.removePageById(it.pageid!!) }
     }
+
+    fun getIsHistory(pageId: Int): Boolean {
+        return historyRepository.isArticleInHistory(pageId)
+    }
 }

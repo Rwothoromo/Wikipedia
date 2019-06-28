@@ -54,4 +54,11 @@ class HistoryRepository(val databaseHelper: ArticleDatabaseOpenHelper) {
 
         return pages
     }
+
+    fun isArticleInHistory(pageId: Int): Boolean {
+        val pages = getAllHistory()
+        return pages.any { page ->
+            page.pageid == pageId
+        }
+    }
 }
